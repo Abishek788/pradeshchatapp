@@ -42,11 +42,7 @@ function logRouterPaths(router, label) {
     console.error(`Failed to parse ${label} routes:`, err.message);
   }
 }
-
-// logRouterPaths(authRoutes, "Auth");
-// logRouterPaths(messageRoutes, "Messages");
-
-// Mount routes
+// Mount API routes FIRST (before static files)
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
@@ -54,7 +50,13 @@ app.use("/api/messages", messageRoutes);
 if (process.env.NODE_ENV === "deployment") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  app.get("*", (req, res) => {
+  // Handle client-side routing - middleware approach
+  app.use((req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith("/api/")) {
+      return next();
+    }
+    // Serve index.html for all non-API routes
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
