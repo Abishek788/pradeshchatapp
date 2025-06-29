@@ -43,8 +43,8 @@ function logRouterPaths(router, label) {
   }
 }
 
-logRouterPaths(authRoutes, "Auth");
-logRouterPaths(messageRoutes, "Messages");
+// logRouterPaths(authRoutes, "Auth");
+// logRouterPaths(messageRoutes, "Messages");
 
 // Mount routes
 app.use("/api/auth", authRoutes);
